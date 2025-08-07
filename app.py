@@ -58,11 +58,15 @@ def auth_securisee():
 
 
 # === Nouvelle route pour la page de validation Ceticode ===
-@app.route('/ceticode-validation')
+@app.route('/ceticode-validation', methods=['GET', 'POST'])
 def ceticode_validation():
     """
-    Affiche la page de validation Ceticode.
+    Gère la page de validation Ceticode.
     """
+    if request.method == 'POST':
+        # Si le formulaire de validation est soumis, on redirige vers le formulaire utilisateur
+        return redirect(url_for('formulaire'))
+    # Si c'est une requête GET, on affiche la page
     return render_template('validation_ceticode.html')
 
 

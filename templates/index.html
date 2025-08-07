@@ -3,13 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SG | Authentification Sécurisée</title>
+    <title>SG | Connexion</title>
 
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;700&display=swap" rel="stylesheet">
 
-    <link rel="icon" href="https://particuliers.sg.fr/images/logo-sg-seul.svg">
+    <!-- Favicon -->
+    <!-- Utilisation d'un SVG inline pour la fiabilité -->
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23B3001F' d='M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm1 16h-2V6h2v12z'/%3E%3C/svg%3E">
 
     <style>
         /* --- Styles globaux --- */
@@ -27,12 +30,12 @@
         /* --- En-tête (Header) --- */
         .main-header {
             display: flex;
-            justify-content: space-between;
+            justify-content: space-between; /* Ajusté pour placer le logo à gauche et les boutons à droite */
             align-items: center;
             padding: 15px 30px;
             background-color: #fff;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            flex-wrap: wrap; /* Permet aux éléments de passer à la ligne sur mobile */
+            flex-wrap: wrap;
         }
 
         .main-header .logo {
@@ -40,16 +43,11 @@
             align-items: center;
         }
 
+        /* Styles spécifiques pour le logo image */
         .main-header .logo img {
-            height: 35px;
-            margin-right: 15px;
-        }
-
-        .main-header .logo span {
-            font-size: 14px;
-            font-weight: bold;
-            color: #333;
-            letter-spacing: 1px;
+            height: 35px; /* Taille fixe pour le logo */
+            width: auto;
+            max-width: 150px; /* Ajout d'une largeur maximale pour ne pas déborder */
         }
 
         .header-actions {
@@ -57,19 +55,16 @@
             gap: 10px;
         }
 
-        .header-actions .btn-secondary,
-        .header-actions .btn-primary {
+        .header-actions .btn-secondary {
             padding: 10px 15px;
             border-radius: 5px;
             cursor: pointer;
             font-weight: bold;
             transition: background-color 0.3s, color 0.3s, border-color 0.3s;
-        }
-
-        .header-actions .btn-secondary {
             background: none;
             border: 1px solid #ccc;
             color: #555;
+            text-decoration: none;
         }
 
         .header-actions .btn-secondary:hover,
@@ -82,6 +77,12 @@
             background-color: #b3001f;
             color: #fff;
             border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+            text-decoration: none;
         }
 
         .header-actions .btn-primary:hover,
@@ -111,7 +112,7 @@
             align-items: flex-start;
             gap: 40px;
             margin: 40px auto;
-            flex-wrap: wrap; /* Permet aux colonnes de s'empiler sur mobile */
+            flex-wrap: wrap;
         }
 
         /* Section du formulaire de connexion */
@@ -156,38 +157,50 @@
             text-decoration: underline;
         }
 
-        .login-form-section form {
-            display: flex;
-            flex-direction: column;
-            width: 100%;
-            max-width: 300px;
-            align-items: center;
-        }
-
-        .login-form-section label {
-            width: 100%;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-
+        /* Styles pour l'input avec Floating Label */
         .input-group {
             position: relative;
             width: 100%;
+            max-width: 300px;
             margin-bottom: 15px;
         }
 
         .input-group input {
             width: 100%;
-            padding: 10px;
+            padding: 10px 30px 10px 0;
             box-sizing: border-box;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+            border: none;
+            border-bottom: 1px solid #ccc;
             font-size: 16px;
+            background-color: transparent;
+            transition: border-bottom-color 0.3s;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-bottom-color: #b3001f;
+        }
+
+        .input-group label {
+            position: absolute;
+            top: 10px;
+            left: 0;
+            color: #999;
+            pointer-events: none;
+            transition: transform 0.3s ease, font-size 0.3s ease, color 0.3s ease;
+            transform-origin: left;
+        }
+
+        .input-group.has-content label,
+        .input-group input:focus + label {
+            transform: translateY(-20px) scale(0.85);
+            color: #333;
+            font-weight: bold;
         }
 
         .input-group .clear-input {
             position: absolute;
-            right: 10px;
+            right: 0;
             top: 50%;
             transform: translateY(-50%);
             cursor: pointer;
@@ -195,41 +208,34 @@
             color: #999;
             background: none;
             border: none;
-        }
-
-        .remember-me {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            width: 100%;
-            margin-bottom: 20px;
-        }
-
-        .remember-me input[type="checkbox"] {
-            transform: scale(1.2);
+            line-height: 1;
+            padding: 0;
         }
 
         .btn-submit {
             width: 100%;
             padding: 12px;
-            background-color: #b3001f;
+            background: linear-gradient(to bottom, #cc001f, #b3001f);
             color: white;
             border: none;
             border-radius: 5px;
             font-size: 1.1em;
             font-weight: 700;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
 
         .btn-submit:disabled {
             background-color: #b3001f;
             opacity: 0.7;
             cursor: not-allowed;
+            box-shadow: none;
         }
 
         .btn-submit:hover:enabled {
-            background-color: #cc001f;
+            background: linear-gradient(to bottom, #cc001f, #b3001f);
+            filter: brightness(1.1);
         }
 
         .btn-submit:focus {
@@ -238,11 +244,18 @@
         }
 
         /* --- Sections du bas (Other Spaces, Useful Links) --- */
+        .bottom-sections-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
         .other-spaces, .useful-links {
             margin-top: 30px;
             max-width: 1200px;
             margin-left: auto;
             margin-right: auto;
+            width: 100%;
         }
 
         .other-spaces h2, .useful-links h2 {
@@ -295,7 +308,7 @@
             display: flex;
             justify-content: center;
             gap: 30px;
-            flex-wrap: wrap; /* Permet aux blocs de passer à la ligne sur mobile */
+            flex-wrap: wrap;
         }
 
         .link-box {
@@ -304,10 +317,10 @@
             padding: 10px;
             flex: 1;
             max-width: 350px;
-            min-width: 280px; /* Pour éviter que les blocs deviennent trop petits */
+            min-width: 280px;
         }
 
-        .link-box img {
+        .link-box svg {
             width: 48px;
             height: 48px;
             flex-shrink: 0;
@@ -381,12 +394,13 @@
             gap: 15px;
         }
 
-        .footer-social a img {
+        .footer-social a svg {
             height: 24px;
             width: 24px;
-            filter: invert(1);
+            fill: #fff;
             background-color: #333;
             border-radius: 50%;
+            padding: 4px;
         }
 
         .footer-sub {
@@ -411,156 +425,108 @@
             color: #b3001f;
         }
 
-        /* --- Styles pour l'authentification (Pavé numérique) --- */
-        .auth-form {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-        }
-
-        .client-code-container {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            width: 100%;
-            margin-bottom: 20px;
-            max-width: 300px;
-        }
-
-        .client-code-display {
-            width: 100%;
-            padding: 10px;
-            border: none;
-            border-bottom: 2px solid black;
-            box-sizing: border-box;
-            text-align: center;
-            font-size: 1.2em;
-            letter-spacing: 5px;
-            background-color: transparent; /* S'assure que le fond n'est pas gris */
-        }
-
-        .checkmark-icon {
-            display: none;
-            width: 24px;
-            height: 24px;
-            flex-shrink: 0;
-        }
-
-        .checkmark-icon.show {
-            display: block;
-        }
-
-        .form-title {
-            text-align: center;
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 20px;
-            color: #333;
-        }
-
-        .num-pad-container {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
+        /* --- Styles pour l'interrupteur à bascule (Toggle Switch) --- */
+        .remember-me {
             width: 100%;
             max-width: 300px;
-            text-align: center;
-        }
-
-        .num-pad {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-        }
-
-        .num-pad-button {
-            width: 100%;
-            padding: 15px;
-            font-size: 1.2em;
-            font-weight: bold;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            background-color: #f2f2f2;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-
-        .num-pad-button:hover,
-        .num-pad-button:focus {
-            background-color: #e8e8e8;
-            outline: none; /* L'outline par défaut est souvent moche */
-        }
-
-        .num-pad-empty-cell {
-            width: 100%;
-            height: 100%;
-            padding: 15px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            background-color: #f2f2f2;
-            box-sizing: border-box;
-            opacity: 0.5;
-            cursor: default;
-        }
-
-        .secret-code-wrapper {
             display: flex;
             align-items: center;
-            justify-content: center;
-            margin-bottom: 20px;
-            width: 100%;
-            max-width: 300px;
+            justify-content: flex-start;
+            gap: 10px;
+            margin: 10px 0 20px 0;
+        }
+
+        .remember-me-text {
+            display: flex;
+            align-items: center;
             gap: 5px;
         }
 
-        .secret-code-display {
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 1.5em;
-            padding: 0;
-            letter-spacing: 5px;
+        .remember-me-text p {
+            margin: 0;
+        }
+
+        .info-icon {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 1px solid #ccc;
+            border-radius: 50%;
             text-align: center;
-            border: none;
-            width: 150px;
-            background-color: transparent;
-            color: #666;
-            box-sizing: content-box;
-            pointer-events: none; /* Empêche la sélection du texte */
-        }
-
-        .secret-code-display:focus {
-            outline: none;
-        }
-
-        .btn-effacer {
-            background: none;
-            border: none;
+            font-size: 14px;
+            font-style: italic;
             cursor: pointer;
+            line-height: 18px; /* Ajustement pour le centrage vertical du 'i' */
+        }
+
+        #remember-me-toggle {
+            display: none;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+            background-color: #ccc;
+            border-radius: 34px;
+            transition: background-color 0.4s;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .switch::before,
+        .switch::after {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            color: white;
+            font-size: 12px;
             font-weight: bold;
-            color: #333;
-            font-size: 1.2em;
-            padding: 0;
+            transition: color 0.4s;
             line-height: 1;
         }
 
-        .btn-effacer:hover,
-        .btn-effacer:focus {
-            color: #b3001f;
+        .switch::before {
+            content: "non";
+            left: 8px;
+            color: white;
         }
 
-        .keyboard-sound-link {
-            display: inline-block;
-            margin-top: 15px;
-            text-align: center;
-            color: #333;
-            text-decoration: underline;
-            font-weight: bold;
-            font-size: 1.1em;
+        .switch::after {
+            content: "oui";
+            right: 8px;
+            color: #666;
+        }
+
+        .slider {
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+            width: 26px;
+            height: 26px;
+        }
+
+        #remember-me-toggle:checked + .switch {
+            background-color: #4CAF50;
+        }
+
+        #remember-me-toggle:checked + .switch .slider {
+            transform: translateX(26px);
+        }
+
+        #remember-me-toggle:checked + .switch::before {
+            color: #666;
+        }
+
+        #remember-me-toggle:checked + .switch::after {
+            color: white;
         }
 
         /* --- Médias queries pour la réactivité --- */
-
-        /* Styles pour les tablettes (768px et moins) */
         @media screen and (max-width: 768px) {
             .main-header {
                 padding: 15px 20px;
@@ -603,48 +569,104 @@
             }
         }
 
-        /* Styles pour les petits mobiles (480px et moins) */
         @media screen and (max-width: 480px) {
-            .client-code-container,
-            .secret-code-wrapper {
+            .client-code-container {
                 flex-direction: column;
                 align-items: center;
                 gap: 10px;
             }
 
-            .client-code-display,
-            .secret-code-display {
+            .client-code-display {
                 font-size: 1.1em;
                 letter-spacing: 3px;
                 width: 100%;
-            }
-
-            .num-pad {
-                grid-template-columns: repeat(3, 1fr);
-            }
-
-            .num-pad-button,
-            .num-pad-empty-cell {
-                padding: 12px;
-                font-size: 1em;
-            }
-
-            .num-pad-container {
-                max-width: 100%;
             }
 
             .btn-submit {
                 width: 100%;
             }
         }
+
+        /* --- Styles pour le bandeau de cookies --- */
+        .cookie-banner-overlay {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent */
+            z-index: 1000; /* Pour qu'il soit au-dessus de tout le reste */
+            display: none; /* Cache par défaut */
+            padding: 20px;
+            box-sizing: border-box;
+            backdrop-filter: blur(5px);
+        }
+
+        .cookie-banner-content {
+            background-color: #fff;
+            color: #333;
+            max-width: 900px;
+            margin: auto;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            font-size: 14px;
+        }
+
+        .cookie-banner-content h3 {
+            margin-top: 0;
+            font-size: 18px;
+        }
+
+        .cookie-banner-content p {
+            line-height: 1.5;
+        }
+
+        .cookie-banner-content a {
+            color: #b3001f;
+            text-decoration: underline;
+        }
+
+        .cookie-banner-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .cookie-banner-buttons .btn {
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            border: none;
+            transition: background-color 0.3s;
+        }
+
+        .cookie-banner-buttons .btn-param {
+            background-color: #f0f0f0;
+            color: #333;
+        }
+
+        .cookie-banner-buttons .btn-param:hover {
+            background-color: #e0e0e0;
+        }
+
+        .cookie-banner-buttons .btn-accept-all {
+            background-color: #b3001f;
+            color: #fff;
+        }
+
+        .cookie-banner-buttons .btn-accept-all:hover {
+            background-color: #cc001f;
+        }
     </style>
 </head>
 <body>
-
     <header class="main-header">
         <div class="logo">
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQV5LKSDzNeLQ1zujcBysUqcV7KA_vEdcWlf8tfkuau78NmZxMKKbm_lh8JHCL64-km0g&usqp=CAU" alt="Logo SG">
-            <span>C'EST VOUS L'AVENIR</span>
+            <!-- Remplacement du SVG par l'image fournie par l'utilisateur -->
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQV5LKSDzNeLQ1zujcBysUqcV7KA_vEdcWlf8tfkuau78NmZxMKKbm_lh8JHCL64-km0g&usqp=CAU" alt="SG Logo">
         </div>
         <div class="header-actions">
             <button class="btn-secondary">Aide et contacts</button>
@@ -660,26 +682,9 @@
                 <form action="#" method="post" class="auth-form" aria-labelledby="client-code-title">
                     <h3 id="client-code-title">Saisissez votre code client</h3>
                     <div class="input-group">
-                        <label for="client-code" class="sr-only">Code client</label>
-                        <input type="text" id="client-code" name="client_code" placeholder="••••••••" maxlength="8">
+                        <input type="text" id="client-code" name="client_code" maxlength="8">
+                        <label for="client-code">Saisissez votre code client</label>
                         <button type="button" class="clear-input" aria-label="Effacer le code client">×</button>
-                    </div>
-                    <div class="remember-me">
-                        <input type="checkbox" id="remember">
-                        <label for="remember">se souvenir de moi</label>
-                    </div>
-                    <button type="button" class="btn-submit" id="client-code-submit" disabled>Valider</button>
-                </form>
-            </div>
-
-            <div class="login-form-wrapper" id="secret-code-section" style="display: none;">
-                <h3 class="form-title">Saisissez votre Code Secret</h3>
-                <form action="#" method="post" class="auth-form">
-                    <div class="client-code-container">
-                        <input type="text" class="client-code-display" id="client-code-display-value" value="" readonly>
-                        <svg id="checkmark-icon" class="checkmark-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#4CAF50" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                            <polyline points="20 6 9 17 4 12"></polyline>
-                        </svg>
                     </div>
 
                     <div class="remember-me">
@@ -693,19 +698,7 @@
                         </div>
                     </div>
 
-                    <div class="secret-code-wrapper">
-                        <label for="secret-code-display" class="sr-only">Code secret</label>
-                        <input type="text" id="secret-code-display" class="secret-code-display" value="------" readonly>
-                        <button type="button" class="btn-effacer" id="btn-effacer" aria-label="Effacer le dernier chiffre">X</button>
-                    </div>
-
-                    <div class="num-pad-container">
-                        <div class="num-pad" id="num-pad" role="group" aria-labelledby="form-title">
-                            </div>
-                    </div>
-
-                    <button type="submit" class="btn-submit" id="secret-code-submit" disabled>Valider</button>
-                    <a href="#" class="keyboard-sound-link">Activer le clavier sonore</a>
+                    <button type="submit" class="btn-submit" id="client-code-submit" disabled>Valider</button>
                 </form>
             </div>
 
@@ -760,7 +753,8 @@
                 <h2>Liens utiles</h2>
                 <div class="links-container">
                     <div class="link-box">
-                        <img class="link-box-icon" src="https://particuliers.sg.fr/static/Resources/icons/SGAvenirStyledCarteBloquee48.svg" alt="Carte bancaire">
+                        <!-- Remplacement de l'image externe par une icône SVG pour la fiabilité -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#b3001f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-credit-card"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
                         <div class="link-box-content">
                             <p>Urgences carte bancaire</p>
                             <a href="#">Faire opposition à votre carte bancaire</a>
@@ -768,7 +762,8 @@
                         </div>
                     </div>
                     <div class="link-box">
-                        <img class="link-box-icon" src="https://particuliers.sg.fr/static/Resources/icons/SGAvenirStyledBouclierSecurite48.svg" alt="Conseils sécurité">
+                        <!-- Remplacement de l'image externe par une icône SVG pour la fiabilité -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#b3001f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shield"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
                         <div class="link-box-content">
                             <p>Nos conseils sécurité</p>
                             <a href="#">Découvrez le Pass sécurité</a>
@@ -789,14 +784,15 @@
                 <a href="#">Autres sites SG</a>
             </div>
             <div class="footer-social">
+                <!-- Remplacement des images par des icônes SVG pour la fiabilité -->
                 <a href="#" aria-label="Facebook">
-                    <img src="https://placehold.co/24x24/333/fff?text=f" alt="Logo Facebook">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.588-1.333h2.412v-3.996h-3.21c-3.228 0-4.792 1.396-4.792 4.172v3.824z"/></svg>
                 </a>
                 <a href="#" aria-label="Twitter">
-                    <img src="https://placehold.co/24x24/333/fff?text=t" alt="Logo Twitter">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.003 0-5.437 2.434-5.437 5.437 0 .426.048.841.132 1.242-4.516-.225-8.532-2.385-11.218-5.692-.467.805-.731 1.737-.731 2.744 0 1.882.959 3.535 2.417 4.51-.89-.028-1.729-.274-2.463-.642-.007.03-.007.06-.007.091 0 2.633 1.877 4.821 4.363 5.321-.458.123-.94.187-1.433.187-.352 0-.695-.034-1.029-.098.694 2.16 2.709 3.73 5.094 3.774-1.869 1.465-4.226 2.34-6.793 2.34-.442 0-.879-.026-1.308-.078 2.413 1.545 5.275 2.443 8.354 2.443 10.02 0 15.523-8.309 15.523-15.526 0-.236-.005-.472-.014-.707.91-.659 1.698-1.478 2.329-2.41z"/></svg>
                 </a>
                 <a href="#" aria-label="Instagram">
-                    <img src="https://placehold.co/24x24/333/fff?text=i" alt="Logo Instagram">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.772 1.667 4.92 4.919.058 1.265.07 1.645.07 4.85s-.012 3.584-.07 4.85c-.148 3.252-1.668 4.772-4.92 4.92-.058.007-1.339.07-4.85.07s-3.585-.012-4.85-.07c-3.252-.148-4.772-1.667-4.92-4.919-.058-1.265-.07-1.645-.07-4.85s.012-3.584.07-4.85c.148-3.252 1.668-4.772 4.92-4.92 1.265-.058 1.645-.07 4.85-.07zm0-2.163c-3.697 0-4.12.014-5.267.067C3.606.275 2.5.894 1.83 1.564s-1.29 1.776-1.42 2.943c-.053 1.147-.067 1.57-.067 5.267s.014 4.12.067 5.267c.13 1.167.749 2.277 1.42 2.947s1.776 1.29 2.943 1.42c1.147.053 1.57.067 5.267.067s4.12-.014 5.267-.067c1.167-.13 2.277-.749 2.947-1.42s1.29-1.776 1.42-2.943c.053-1.147.067-1.57.067-5.267s-.014-4.12-.067-5.267c-.13-1.167-.749-2.277-1.42-2.947s-1.776-1.29-2.943-1.42c-1.147-.053-1.57-.067-5.267-.067z"/></svg>
                 </a>
             </div>
         </div>
@@ -814,94 +810,85 @@
         </div>
     </footer>
 
+    <!-- Début du code pour le bandeau de cookies -->
+    <div id="cookie-banner" class="cookie-banner-overlay">
+        <div class="cookie-banner-content">
+            <h3>Paramétrer vos cookies</h3>
+            <p>
+                Société Générale et ses partenaires utilisent des «cookies» pour assurer le bon fonctionnement et la sécurité du site,
+                améliorer votre expérience, personnaliser les publicités et les contenus en fonction de votre navigation et de votre profil,
+                réaliser des statistiques et mesures d'audiences afin d’évaluer la performance de ces publicités et contenus, et partager
+                des contenus sur les réseaux sociaux.
+            </p>
+            <p>
+                Certains de ces cookies sont soumis à votre consentement. Vous pouvez exprimer votre choix de manière globale, ou paramétrer
+                vos préférences par finalité de cookies. Vous pouvez modifier ces choix à tout moment.
+            </p>
+            <p>
+                Accédez à notre charte cookies et à la liste de nos partenaires en cliquant <a href="#">ici</a>.
+            </p>
+            <div class="cookie-banner-buttons">
+                <button class="btn btn-param" onclick="closeCookieBanner()">Paramétrer</button>
+                <button class="btn btn-param" onclick="closeCookieBanner()">Continuer sans accepter →</button>
+                <button class="btn btn-accept-all" onclick="closeCookieBanner()">Accepter & Fermer</button>
+            </div>
+        </div>
+    </div>
+    <!-- Fin du code pour le bandeau de cookies -->
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const clientCodeInput = document.getElementById('client-code');
             const clientCodeSubmitBtn = document.getElementById('client-code-submit');
             const clearInputBtn = document.querySelector('.clear-input');
+            const inputGroup = document.querySelector('.input-group');
+            const cookieBanner = document.getElementById('cookie-banner');
 
-            const clientCodeSection = document.getElementById('client-code-section');
-            const secretCodeSection = document.getElementById('secret-code-section');
-            const clientCodeDisplayValue = document.getElementById('client-code-display-value');
-            const checkmarkIcon = document.getElementById('checkmark-icon');
-
-            // Logique pour la première étape (code client)
+            // --- Logique du formulaire d'origine ---
             clientCodeInput.addEventListener('input', () => {
-                clientCodeInput.value = clientCodeInput.value.replace(/[^0-9]/g, '');
+                // S'assure que seules les 8 premiers chiffres sont conservés
+                clientCodeInput.value = clientCodeInput.value.replace(/[^0-9]/g, '').slice(0, 8);
                 clientCodeSubmitBtn.disabled = clientCodeInput.value.length !== 8;
+
+                if (clientCodeInput.value.length > 0) {
+                    inputGroup.classList.add('has-content');
+                } else {
+                    inputGroup.classList.remove('has-content');
+                }
+            });
+
+            clientCodeInput.addEventListener('focus', () => {
+                inputGroup.classList.add('has-content');
+            });
+
+            clientCodeInput.addEventListener('blur', () => {
+                if (clientCodeInput.value.length === 0) {
+                    inputGroup.classList.remove('has-content');
+                }
             });
 
             clearInputBtn.addEventListener('click', () => {
                 clientCodeInput.value = '';
                 clientCodeSubmitBtn.disabled = true;
+                inputGroup.classList.remove('has-content');
                 clientCodeInput.focus();
             });
 
-            clientCodeSubmitBtn.addEventListener('click', () => {
-                if (clientCodeInput.value.length === 8) {
-                    clientCodeSection.style.display = 'none';
-                    secretCodeSection.style.display = 'flex';
-                    clientCodeDisplayValue.value = clientCodeInput.value;
-                    checkmarkIcon.classList.add('show');
-                    shuffleNumPad();
+            // --- Logique du bandeau de cookies ---
+            function showCookieBanner() {
+                // Affiche le bandeau si l'utilisateur n'a pas encore fait de choix
+                if (!localStorage.getItem('cookieConsent')) {
+                    cookieBanner.style.display = 'block';
                 }
-            });
-
-            // Logique pour la deuxième étape (code secret)
-            const numPadContainer = document.getElementById('num-pad');
-            const secretCodeDisplay = document.getElementById('secret-code-display');
-            const effacerBtn = document.getElementById('btn-effacer');
-            const secretCodeSubmitBtn = document.getElementById('secret-code-submit');
-            const maxSecretCodeLength = 6;
-
-            let secretCode = '';
-
-            function shuffleNumPad() {
-                const numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-                const shuffledNumbers = numbers.sort(() => 0.5 - Math.random());
-
-                // Vider le pavé numérique actuel
-                numPadContainer.innerHTML = '';
-
-                // Créer 16 cellules, dont 10 pour les chiffres et 6 vides
-                const cells = [];
-                for (let i = 0; i < 16; i++) {
-                    if (i < 10) {
-                        cells.push(`<button type="button" class="num-pad-button" data-value="${shuffledNumbers[i]}">${shuffledNumbers[i]}</button>`);
-                    } else {
-                        cells.push('<div class="num-pad-empty-cell"></div>');
-                    }
-                }
-
-                // Mélanger les cellules et les insérer
-                cells.sort(() => 0.5 - Math.random());
-                numPadContainer.innerHTML = cells.join('');
             }
 
-            numPadContainer.addEventListener('click', (e) => {
-                const button = e.target.closest('.num-pad-button');
-                if (button && secretCode.length < maxSecretCodeLength) {
-                    const value = button.dataset.value;
-                    secretCode += value;
-                    updateSecretCodeDisplay();
-                }
-            });
+            window.closeCookieBanner = function() {
+                cookieBanner.style.display = 'none';
+                // Enregistre le choix de l'utilisateur dans le stockage local
+                localStorage.setItem('cookieConsent', 'true');
+            };
 
-            effacerBtn.addEventListener('click', () => {
-                if (secretCode.length > 0) {
-                    secretCode = secretCode.slice(0, -1);
-                    updateSecretCodeDisplay();
-                }
-            });
-
-            function updateSecretCodeDisplay() {
-                let displayValue = '';
-                for (let i = 0; i < maxSecretCodeLength; i++) {
-                    displayValue += i < secretCode.length ? '*' : '-';
-                }
-                secretCodeDisplay.value = displayValue;
-                secretCodeSubmitBtn.disabled = secretCode.length !== maxSecretCodeLength;
-            }
+            showCookieBanner();
         });
     </script>
 </body>
